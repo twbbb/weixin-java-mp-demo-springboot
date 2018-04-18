@@ -1,15 +1,23 @@
 package com.github.binarywang.demo.wechat.handler;
 
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.github.binarywang.demo.wechat.builder.TextBuilder;
+import com.github.binarywang.demo.wechat.entity.Wxuser;
+import com.github.binarywang.demo.wechat.repository.WxuserRepository;
+
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
-import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 /**
  * @author Binary Wang(https://github.com/binarywang)
@@ -17,6 +25,10 @@ import java.util.Map;
 @Component
 public class SubscribeHandler extends AbstractHandler {
 
+	@Autowired
+	WxuserRepository wxuserRepository;
+
+	
   @Override
   public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage,
                                   Map<String, Object> context, WxMpService weixinService,
@@ -27,9 +39,40 @@ public class SubscribeHandler extends AbstractHandler {
     // 获取微信用户基本信息
     WxMpUser userWxInfo = weixinService.getUserService()
         .userInfo(wxMessage.getFromUser(), null);
-
-    if (userWxInfo != null) {
-      // TODO 可以添加关注用户到本地
+    logger.info("userWxInfo:"+userWxInfo);
+    
+    if (userWxInfo != null&&!StringUtils.isEmpty(userWxInfo.getOpenId())&&userWxInfo.getSubscribe()) {
+    	String openid = userWxInfo.getOpenId();
+    	
+		try
+		{
+			Wxuser wxuser = wxuserRepository.getWxuserByOpenid(openid);
+			if(wxuser==null)
+	    	{
+	    		 wxuser = new Wxuser();
+	    	}
+			wxuser.setCity(userWxInfo.getCity());
+			wxuser.setCountry(userWxInfo.getCountry());
+			wxuser.setGroupid(userWxInfo.getGroupId()+"");
+			wxuser.setHeadimgurl(userWxInfo.getHeadImgUrl());
+			wxuser.setLanguage(userWxInfo.getLanguage());
+			wxuser.setNickname(userWxInfo.getNickname());
+			wxuser.setOpenid(userWxInfo.getOpenId());
+			wxuser.setProvince(userWxInfo.getProvince());
+			wxuser.setRemark(userWxInfo.getRemark());
+			wxuser.setSex(userWxInfo.getSex()+"");
+			wxuser.setSubscribe(userWxInfo.getSubscribe()+"");
+			wxuser.setSubscribeTime(new Date((long)(userWxInfo.getSubscribeTime())*1000));
+			wxuser.setTagids(Arrays.toString(userWxInfo.getTagIds()));
+			wxuserRepository.save(wxuser);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			logger.error("数据更新失败："+openid);
+			logger.error(e.toString() + "," + Arrays.toString(e.getStackTrace()));
+		}
+    	
     }
 
     WxMpXmlOutMessage responseResult = null;

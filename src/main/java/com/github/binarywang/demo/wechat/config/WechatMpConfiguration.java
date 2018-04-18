@@ -75,21 +75,21 @@ public class WechatMpConfiguration {
     newRouter.rule().handler(this.logHandler).next();
 
     // 接收客服会话管理事件
-    newRouter.rule().async(false).msgType(XmlMsgType.EVENT)
-        .event(WxMpEventConstants.CustomerService.KF_CREATE_SESSION)
-        .handler(this.kfSessionHandler).end();
-    newRouter.rule().async(false).msgType(XmlMsgType.EVENT)
-        .event(WxMpEventConstants.CustomerService.KF_CLOSE_SESSION)
-        .handler(this.kfSessionHandler)
-        .end();
-    newRouter.rule().async(false).msgType(XmlMsgType.EVENT)
-        .event(WxMpEventConstants.CustomerService.KF_SWITCH_SESSION)
-        .handler(this.kfSessionHandler).end();
-
-    // 门店审核事件
-    newRouter.rule().async(false).msgType(XmlMsgType.EVENT)
-        .event(WxMpEventConstants.POI_CHECK_NOTIFY)
-        .handler(this.storeCheckNotifyHandler).end();
+//    newRouter.rule().async(false).msgType(XmlMsgType.EVENT)
+//        .event(WxMpEventConstants.CustomerService.KF_CREATE_SESSION)
+//        .handler(this.kfSessionHandler).end();
+//    newRouter.rule().async(false).msgType(XmlMsgType.EVENT)
+//        .event(WxMpEventConstants.CustomerService.KF_CLOSE_SESSION)
+//        .handler(this.kfSessionHandler)
+//        .end();
+//    newRouter.rule().async(false).msgType(XmlMsgType.EVENT)
+//        .event(WxMpEventConstants.CustomerService.KF_SWITCH_SESSION)
+//        .handler(this.kfSessionHandler).end();
+//
+//    // 门店审核事件
+//    newRouter.rule().async(false).msgType(XmlMsgType.EVENT)
+//        .event(WxMpEventConstants.POI_CHECK_NOTIFY)
+//        .handler(this.storeCheckNotifyHandler).end();
 
     // 自定义菜单事件
     newRouter.rule().async(false).msgType(XmlMsgType.EVENT)
@@ -110,17 +110,17 @@ public class WechatMpConfiguration {
         .handler(this.getUnsubscribeHandler()).end();
 
     // 上报地理位置事件
-    newRouter.rule().async(false).msgType(XmlMsgType.EVENT)
-        .event(EventType.LOCATION).handler(this.getLocationHandler())
-        .end();
-
-    // 接收地理位置消息
-    newRouter.rule().async(false).msgType(XmlMsgType.LOCATION)
-        .handler(this.getLocationHandler()).end();
-
-    // 扫码事件
-    newRouter.rule().async(false).msgType(XmlMsgType.EVENT)
-        .event(EventType.SCAN).handler(this.getScanHandler()).end();
+//    newRouter.rule().async(false).msgType(XmlMsgType.EVENT)
+//        .event(EventType.LOCATION).handler(this.getLocationHandler())
+//        .end();
+//
+//    // 接收地理位置消息
+//    newRouter.rule().async(false).msgType(XmlMsgType.LOCATION)
+//        .handler(this.getLocationHandler()).end();
+//
+//    // 扫码事件
+//    newRouter.rule().async(false).msgType(XmlMsgType.EVENT)
+//        .event(EventType.SCAN).handler(this.getScanHandler()).end();
 
     // 默认
     newRouter.rule().async(false).handler(this.getMsgHandler()).end();

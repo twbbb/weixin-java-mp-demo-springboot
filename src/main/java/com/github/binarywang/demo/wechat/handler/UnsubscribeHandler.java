@@ -4,8 +4,16 @@ import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.github.binarywang.demo.wechat.entity.Wxuser;
+import com.github.binarywang.demo.wechat.repository.WxuserRepository;
+
+import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -14,13 +22,35 @@ import java.util.Map;
 @Component
 public class UnsubscribeHandler extends AbstractHandler {
 
+	@Autowired
+	WxuserRepository wxuserRepository;
+	
   @Override
   public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage,
                                   Map<String, Object> context, WxMpService wxMpService,
                                   WxSessionManager sessionManager) {
     String openId = wxMessage.getFromUser();
     this.logger.info("取消关注用户 OPENID: " + openId);
-    // TODO 可以更新本地数据库为取消关注状态
+    if (!StringUtils.isEmpty(openId)) {
+		try
+		{
+			Wxuser wxuser = wxuserRepository.getWxuserByOpenid(openId);
+			if(wxuser!=null)
+	    	{
+				wxuser.setSubscribe("false");
+	    		 wxuserRepository.save(wxuser);
+	    	}
+			
+			
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			logger.error("数据更新失败："+openId);
+			logger.error(e.toString() + "," + Arrays.toString(e.getStackTrace()));
+		}
+    	
+    }
     return null;
   }
 
