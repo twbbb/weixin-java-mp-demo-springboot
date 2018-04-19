@@ -188,6 +188,7 @@ public class WxOauthController
 		}
 		
 		Boolean b = (Boolean)TOEKN_MAP.remove(token);
+		logger.info("token cache:"+b);
 		if(b==null||!b)
 		{
 			logger.error("token验证失败");
@@ -223,10 +224,10 @@ public class WxOauthController
 
 		if (StringUtils.isEmpty(openiddsb))
 		{
-			logger.error("未取到云大商帮openid2" + code + "," + state);
+			logger.error("未取到云大商帮openiddsb" + code + "," + state);
 			return map;
 		}
-		logger.info("拿到openidxff：" + openiddsb);
+		logger.info("拿到openiddsb：" + openiddsb);
 		if (!OPENID_MAP.containsKey(openidxff))
 		{
 			OPENID_MAP.put(openidxff, openiddsb);
