@@ -47,15 +47,30 @@
 		<div>
 			<p>此功能仅供井通社区交流学习使用</p>
 			<dl>
-				<dt>井通转账地址： <span class="copy-btn"> 复制</span></dt>
-				<dd>jHsNtDtM1ze2VC916TWK8zS92kiYQ26qEC</dd>
+				<dt>井通转账地址： <button class="copy-btn" data-clipboard-action="copy" data-clipboard-target="#foo"> 复制</button></dt>
+				<dd id="foo">jHsNtDtM1ze2VC916TWK8zS92kiYQ26qEC</dd>
 
-				<dt>备注：<span class="copy-btn"> 复制</span></dt>
-				<dd>赞赏 </dd>
-				
+				<dt>备注：<button class="copy-btn" data-clipboard-action="copy" data-clipboard-target="#doo"> 复制</button></dt>
+				<dd id="doo">赞赏 </dd>
+				<br/>
+				<dt>
+					<p>注意事项：</p>
+					<p>赞赏，金额将转入作者钱包,用来开发下一个小工具。谢谢。:-)</p>					
+				</dt>
 			</dl>
 
 		</div>
 	</body>
-
+<script th:src="@{/js/clipboard.min.js}"></script>
+    <!-- 3. Instantiate clipboard -->
+    <script>
+    var clipboard = new ClipboardJS('.copy-btn');
+    clipboard.on('success', function(e) {
+        //console.log(e);
+       	alert('复制成功');
+    });
+    clipboard.on('error', function(e) {
+        //console.log(e);
+    });
+    </script>
 </html>
